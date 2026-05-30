@@ -114,37 +114,30 @@ def render_sidebar(user: dict):
 
 
 def render_page(user: dict):
-    page = st.session_state.page
-
-    st.write("Current page:", page)
+    page = st.session_state.get("page", "Dashboard")
 
     routers = {
-        "Dashboard":    render_dashboard,
+        "Dashboard": render_dashboard,
         "AI Assistant": render_ai_assistant,
-        "Notes":        render_notes,
-        "Tasks":        render_tasks,
-        "Flashcards":   render_flashcards,
-        "Pomodoro":     render_pomodoro,
-        "Quiz":         render_quiz,
-        "Analytics":    render_analytics,
-        "Community":    render_community,
-        "Toolkit":      render_toolkit,
+        "Notes": render_notes,
+        "Tasks": render_tasks,
+        "Flashcards": render_flashcards,
+        "Pomodoro": render_pomodoro,
+        "Quiz": render_quiz,
+        "Analytics": render_analytics,
+        "Community": render_community,
+        "Toolkit": render_toolkit,
     }
 
     try:
         renderer = routers.get(page, render_dashboard)
-
-        st.write("Calling:", renderer.__name__)
-
         renderer(user)
 
     except Exception as e:
-        st.error(f"Page error: {e}")
-
         import traceback
+
+        st.error(f"Page error: {e}")
         st.code(traceback.format_exc())
-    renderer = routers.get(page, render_dashboard)
-    renderer(user)
 
 
 def main():
