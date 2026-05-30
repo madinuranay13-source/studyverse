@@ -1,10 +1,3 @@
-"""
-╔══════════════════════════════════════════════════════════╗
-║           STUDYVERSE — Student Intelligence Platform      ║
-║           Built with Streamlit + Claude AI               ║
-╚══════════════════════════════════════════════════════════╝
-"""
-
 import streamlit as st
 import sys
 import os
@@ -43,20 +36,16 @@ if "page" not in st.session_state:
 
 def render_login():
     st.markdown(DARK_THEME_CSS, unsafe_allow_html=True)
-
-    # ── Hero section using native Streamlit ──
     st.markdown("<br><br>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-
         st.markdown("# 🎓 Studyverse")
         st.markdown("### Your AI-powered student intelligence platform")
-        st.caption('"Study smarter. Procrastinate less. (We know. We know.)"')
-
+        st.caption("Study smarter. Procrastinate less. (We know. We know.)")
         st.markdown("---")
+        st.markdown("**What is inside:**")
 
-        st.markdown("**What's inside:**")
         c1, c2, c3 = st.columns(3)
         with c1:
             st.info("🤖 AI Assistant")
@@ -73,9 +62,61 @@ def render_login():
 
         username = st.text_input(
             "Username",
-            placeholder="Pick a username (no spaces)",
+            placeholder="Pick a username",
             key="login_username",
         )
         display_name = st.text_input(
             "Display Name",
-            placeholder="W
+            placeholder="What should we call you?",
+            key="login_display",
+        )
+
+        if st.button("🎓 Enter Studyverse", use_container_width=True, key="login_btn"):
+            uname = username.strip().lower().replace(" ", "_")
+            dname = display_name.strip() or uname
+            if not uname:
+                st.error("Pick a username!")
+            elif len(uname) < 3:
+                st.error("Username must be at least 3 characters.")
+            else:
+                user = get_or_create_user(uname, dname)
+                update_streak(user["id"])
+                st.session_state.user = user
+                st.success("Welcome, " + dname + "! 🎉")
+                st.rerun()
+
+        st.caption("No passwords, no nonsense. Just studying. 📚")
+
+
+def render_sidebar(user: dict):
+    with st.sidebar:
+        st.markdown("## ⚡ Studyverse")
+        st.caption("Student Intelligence Platform")
+        st.markdown("---")
+
+        stats = get_user_stats(user["id"])
+        level_pct = int((stats["xp"] % 500) / 500 * 100)
+        streak = stats.get("streak", 0)
+
+        st.markdown("**" + stats["display_name"] + "** " + user.get("avatar_emoji", "🎓"))
+        st.markdown("Level **" + str(stats["level"]) + "** · 🔥 **" + str(streak) + "** day streak")
+        st.progress(level_pct / 100)
+        st.caption(str(stats["xp"]) + " XP · " + str(500 - (stats["xp"] % 500)) + " XP to next level")
+
+        st.markdown("---")
+
+        nav_items = [
+            ("🏠", "Dashboard"),
+            ("🤖", "AI Assistant"),
+            ("📝", "Notes"),
+            ("✅", "Tasks"),
+            ("🃏", "Flashcards"),
+            ("🍅", "Pomodoro"),
+            ("🎯", "Quiz"),
+            ("📈", "Analytics"),
+            ("🌐", "Community"),
+            ("🛠️", "Toolkit"),
+        ]
+
+        for emoji, label in nav_items:
+            if st.b
