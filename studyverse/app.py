@@ -38,7 +38,7 @@ from pages.toolkit import render_toolkit
 # ── Init DB ───────────────────────────────────────────────────────────────────
 init_db()
 
-# ── Inject CSS ────────────────────────────────────────────────────────────────
+# ── Inject CSS everywhere ─────────────────────────────────────────────────────
 st.markdown(DARK_THEME_CSS, unsafe_allow_html=True)
 
 # ── Session state defaults ────────────────────────────────────────────────────
@@ -52,30 +52,51 @@ if "page" not in st.session_state:
 #  LOGIN / ONBOARDING SCREEN
 # ══════════════════════════════════════════════════════════════════════════════
 def render_login():
+    # Re-inject CSS so it works on Streamlit Cloud too
+    st.markdown(DARK_THEME_CSS, unsafe_allow_html=True)
+
     st.markdown("""
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;
                 min-height:80vh; text-align:center; padding: 2rem;">
 
-        <div style="font-size:4rem; margin-bottom:1rem; animation: float 3s ease-in-out infinite;">🎓</div>
+        <div style="font-size:4rem; margin-bottom:1rem;">🎓</div>
 
-        <div class="sv-hero-title" style="font-size:3.5rem; margin-bottom:0.5rem;">
+        <div style="font-family:'Syne',sans-serif; font-size:3.5rem; font-weight:800;
+                    background:linear-gradient(135deg,#7b4fff,#00d4ff,#00ff88);
+                    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+                    margin-bottom:0.5rem; letter-spacing:-0.03em;">
             Studyverse
         </div>
 
-        <div style="color:var(--text-secondary); font-size:1.1rem; margin-bottom:0.3rem;">
+        <div style="color:rgba(240,238,255,0.6); font-size:1.1rem; margin-bottom:0.3rem;">
             Your AI-powered student intelligence platform
         </div>
 
-        <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom:3rem; font-style:italic;">
+        <div style="color:rgba(240,238,255,0.35); font-size:0.9rem; margin-bottom:3rem; font-style:italic;">
             "Study smarter. Procrastinate less. (We know. We know.)"
         </div>
 
-        <div style="display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:3rem;">
-            <div class="sv-badge sv-badge-purple">🤖 AI Study Assistant</div>
-            <div class="sv-badge sv-badge-cyan">📊 Smart Analytics</div>
-            <div class="sv-badge sv-badge-green">🍅 Pomodoro Timer</div>
-            <div class="sv-badge sv-badge-pink">🃏 Flashcards</div>
-            <div class="sv-badge sv-badge-orange">🌐 Community Q&A</div>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-bottom:3rem;">
+            <span style="background:rgba(123,79,255,0.2); color:#7b4fff; border:1px solid rgba(123,79,255,0.3);
+                         padding:0.3rem 0.9rem; border-radius:99px; font-size:0.85rem; font-weight:600;">
+                🤖 AI Study Assistant
+            </span>
+            <span style="background:rgba(0,212,255,0.2); color:#00d4ff; border:1px solid rgba(0,212,255,0.3);
+                         padding:0.3rem 0.9rem; border-radius:99px; font-size:0.85rem; font-weight:600;">
+                📊 Smart Analytics
+            </span>
+            <span style="background:rgba(0,255,136,0.2); color:#00ff88; border:1px solid rgba(0,255,136,0.3);
+                         padding:0.3rem 0.9rem; border-radius:99px; font-size:0.85rem; font-weight:600;">
+                🍅 Pomodoro Timer
+            </span>
+            <span style="background:rgba(255,77,157,0.2); color:#ff4d9d; border:1px solid rgba(255,77,157,0.3);
+                         padding:0.3rem 0.9rem; border-radius:99px; font-size:0.85rem; font-weight:600;">
+                🃏 Flashcards
+            </span>
+            <span style="background:rgba(255,140,66,0.2); color:#ff8c42; border:1px solid rgba(255,140,66,0.3);
+                         padding:0.3rem 0.9rem; border-radius:99px; font-size:0.85rem; font-weight:600;">
+                🌐 Community Q&A
+            </span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -83,8 +104,10 @@ def render_login():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("""
-        <div class="sv-card" style="padding:2rem; border-color:var(--border-glow);">
-            <h3 style="text-align:center; margin-bottom:1.5rem;">🚀 Enter Studyverse</h3>
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(123,79,255,0.3);
+                    border-radius:16px; padding:2rem; margin-bottom:1rem;">
+            <h3 style="text-align:center; margin-bottom:1.5rem; color:#f0eeff;">🚀 Enter Studyverse</h3>
+        </div>
         """, unsafe_allow_html=True)
 
         username = st.text_input(
@@ -112,10 +135,8 @@ def render_login():
                 st.success(f"Welcome, {dname}! 🎉")
                 st.rerun()
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
         st.markdown("""
-        <div style="text-align:center; color:var(--text-muted); font-size:0.8rem; margin-top:1rem;">
+        <div style="text-align:center; color:rgba(240,238,255,0.35); font-size:0.8rem; margin-top:1rem;">
             No passwords, no nonsense. Just studying. 📚
         </div>
         """, unsafe_allow_html=True)
@@ -128,9 +149,16 @@ def render_sidebar(user: dict):
     with st.sidebar:
         # Brand
         st.markdown("""
-        <div style="padding: 1rem 0 1.5rem 0; border-bottom: 1px solid var(--border-subtle);">
-            <div class="sv-sidebar-brand">⚡ Studyverse</div>
-            <div class="sv-sidebar-sub">Student Intelligence Platform</div>
+        <div style="padding: 1rem 0 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem;
+                        background:linear-gradient(135deg,#7b4fff,#00d4ff);
+                        -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+                ⚡ Studyverse
+            </div>
+            <div style="font-size:0.7rem; color:rgba(240,238,255,0.35); letter-spacing:0.15em;
+                        text-transform:uppercase;">
+                Student Intelligence Platform
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -140,27 +168,38 @@ def render_sidebar(user: dict):
         streak = stats.get("streak", 0)
 
         st.markdown(f"""
-        <div style="padding: 1rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <div style="padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.08);">
             <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:0.8rem;">
-                <div class="sv-avatar">{user.get('avatar_emoji','🎓')}</div>
+                <div style="width:40px; height:40px; border-radius:50%;
+                            background:linear-gradient(135deg,#7b4fff,#00d4ff);
+                            display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+                    {user.get('avatar_emoji','🎓')}
+                </div>
                 <div>
-                    <div style="font-weight:700; font-size:0.9rem;">{stats['display_name']}</div>
+                    <div style="font-weight:700; font-size:0.9rem; color:#f0eeff;">
+                        {stats['display_name']}
+                    </div>
                     <div style="display:flex; gap:0.4rem; align-items:center; margin-top:2px;">
-                        <span class="sv-level-badge">Lvl {stats['level']}</span>
-                        <span style="color:var(--neon-orange); font-size:0.8rem;">🔥 {streak}</span>
+                        <span style="background:linear-gradient(135deg,#7b4fff,#5b2be0); color:white;
+                                     padding:0.15rem 0.5rem; border-radius:99px; font-size:0.72rem; font-weight:700;">
+                            Lvl {stats['level']}
+                        </span>
+                        <span style="color:#ff8c42; font-size:0.8rem;">🔥 {streak}</span>
                     </div>
                 </div>
             </div>
-            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">
+            <div style="font-size:0.7rem; color:rgba(240,238,255,0.35); margin-bottom:4px;">
                 {stats['xp']} XP · {500 - (stats['xp'] % 500)} to next level
             </div>
-            <div class="sv-xp-bar">
-                <div class="sv-xp-fill" style="width:{level_pct:.1f}%;"></div>
+            <div style="height:8px; background:rgba(255,255,255,0.06); border-radius:99px; overflow:hidden;">
+                <div style="height:100%; width:{level_pct:.1f}%; border-radius:99px;
+                            background:linear-gradient(90deg,#7b4fff,#00d4ff);
+                            transition:width 0.8s ease;">
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        # Navigation
         st.markdown("<div style='padding-top:0.5rem;'></div>", unsafe_allow_html=True)
 
         nav_items = [
@@ -179,7 +218,6 @@ def render_sidebar(user: dict):
         current = st.session_state.page
         for emoji, label, hint in nav_items:
             is_active = current == label
-            active_style = "background:rgba(123,79,255,0.15); border:1px solid rgba(123,79,255,0.3); color:var(--neon-purple);" if is_active else "background:transparent; border:1px solid transparent; color:var(--text-secondary);"
             if st.button(
                 f"{emoji}  {label}",
                 key=f"nav_{label}",
@@ -189,12 +227,7 @@ def render_sidebar(user: dict):
                 st.session_state.page = label
                 st.rerun()
 
-        # Bottom: logout + quote
-        st.markdown("""
-        <div style="position:fixed; bottom:0; left:0; width:var(--sidebar-width,18rem); 
-                    padding:1rem; background:rgba(5,5,15,0.95); 
-                    border-top:1px solid var(--border-subtle);">
-        """, unsafe_allow_html=True)
+        st.markdown("---")
 
         if st.button("🚪 Switch User", use_container_width=True, key="logout_btn"):
             st.session_state.user = None
@@ -205,10 +238,9 @@ def render_sidebar(user: dict):
             st.rerun()
 
         st.markdown(f"""
-        <div style="font-size:0.7rem; color:var(--text-muted); text-align:center; margin-top:0.5rem; 
-                    font-style:italic; line-height:1.3;">
+        <div style="font-size:0.7rem; color:rgba(240,238,255,0.35); text-align:center;
+                    margin-top:0.5rem; font-style:italic; line-height:1.3; padding:0.5rem;">
             {random.choice(STUDENT_QUOTES)[:80]}...
-        </div>
         </div>
         """, unsafe_allow_html=True)
 
