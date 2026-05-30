@@ -4,6 +4,9 @@ from components.styles import SUBJECTS
 
 
 def render_community(user: dict):
+    st.write("COMMUNITY PAGE LOADED")
+    st.markdown("<h1 style='color:red'>COMMUNITY PAGE LOADED</h1>", unsafe_allow_html=True)
+
     uid = user["id"]
 
     st.markdown("""
