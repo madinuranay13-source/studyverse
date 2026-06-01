@@ -217,23 +217,29 @@ def render_sidebar(user: dict):
 #  PAGE ROUTER
 # ══════════════════════════════════════════════════════════════════════════════
 def render_page(user: dict):
-    page = st.session_state.page
-    routers = {
-        "Dashboard":    render_dashboard,
-        "AI Assistant": render_ai_assistant,
-        "Notes":        render_notes,
-        "Tasks":        render_tasks,
-        "Flashcards":   render_flashcards,
-        "Pomodoro":     render_pomodoro,
-        "Quiz":         render_quiz,
-        "Analytics":    render_analytics,
-        "Community":    render_community,
-        "Toolkit":      render_toolkit,
-    }
-    renderer = routers.get(page, render_dashboard)
-    renderer(user)
+    try:
+        page = st.session_state.page
 
+        routers = {
+            "Dashboard": render_dashboard,
+            "AI Assistant": render_ai_assistant,
+            "Notes": render_notes,
+            "Tasks": render_tasks,
+            "Flashcards": render_flashcards,
+            "Pomodoro": render_pomodoro,
+            "Quiz": render_quiz,
+            "Analytics": render_analytics,
+            "Community": render_community,
+            "Toolkit": render_toolkit,
+        }
 
+        renderer = routers.get(page, render_dashboard)
+        renderer(user)
+
+    except Exception as e:
+        st.error(f"PAGE ERROR: {e}")
+        import traceback
+        st.code(traceback.format_exc())
 # ══════════════════════════════════════════════════════════════════════════════
 #  MAIN
 # ══════════════════════════════════════════════════════════════════════════════
